@@ -101,13 +101,19 @@ def main():
     # Move the app folder
     (repo / "app").replace(repo / replacements["app"])
 
+    # Move README_TEMPLATE.md
+    (repo / "README_TEMPLATE.md").replace(repo / "README.md")
+
     # Delete this script
-    # bootstrap_file.unlink()
+    bootstrap_file.unlink()
 
     git("add", "*")
-    # git("commit", "-m", "rename from template")
+    git("commit", "-m", "rename from template")
 
-    print("\nRenaming complete. Changes commited.\n")
+    print()
+    print("Renaming complete. Changes commited. Please run:")
+    print("    git push")
+    print()
 
 
 if __name__ == "__main__":
