@@ -11,3 +11,4 @@ experiment running quickly.
 # Features
 * Run `python train.py --debug` while developing for making everything
   single-threaded and as simple (but slow) as possible.
+* `pre-commit` and github actions for running `pre-commit` on PRs is setup.
