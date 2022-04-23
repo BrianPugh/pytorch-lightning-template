@@ -95,13 +95,13 @@ def main():
         contents = replace(contents)
         py_file.write_text(contents)
         if py_file.stem in replacements:
-            dst = py_file.with_name(replacements[py_file.stem])
-            git("mv", py_file, dst)
+            dst = py_file.with_name(replacements[py_file.stem] + ".py")
+            py_file.replace(dst)
 
     # Move the app folder
-    git("mv", "app", replacements["app"])
+    (repo / "app").replace(repo / replacements["app"])
 
-    # Delete this script at the end of execution
+    # Delete this script
     # bootstrap_file.unlink()
 
     git("add", "*")
