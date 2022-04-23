@@ -1,8 +1,6 @@
-import os
 import re
 import readline
 import subprocess
-import sys
 from pathlib import Path
 
 
@@ -85,15 +83,23 @@ def main():
         )
 
     repo = Path(__file__).parent
-    all_py_files = list(repo.rglob("*.py"))
-    for py_file in all_py_files:
+    bootstrap_file = repo / "bootstrap.py"
+    py_files = list(repo.rglob("*.py"))
+    py_files.remove(bootstrap_file)
+    for py_file in py_files:
         contents = py_file.read_text()
-        import ipdb
+        contents = replace(contents)
+        py_file.write_text(contents)
+        if py_file.stem in replacements:
+            py_file.rename(py_file.with_name(replacements[py_file.stem]))
 
-        ipdb.set_trace()
+    # Move the app folder
+    (repo / "app").rename(replacements["app"])
 
     # Delete this script at the end of execution
-    # os.remove(sys.argv[0])
+    # bootstrap_file.unlink()
+
+    subprocess.check_output(["git", "add", "*"])
 
 
 if __name__ == "__main__":
