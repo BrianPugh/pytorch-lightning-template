@@ -1,7 +1,10 @@
 import argparse
 from pathlib import Path
 
+import lox
 from torchvision.datasets.utils import download_url
+
+download_url = lox.thread(download_url)
 
 
 def main():
@@ -19,8 +22,8 @@ def main():
         "http://website-hosting-some-dataset.com/file.zip",
     ]
     for url in urls:
-        print(f"Downloading {url}")
-        download_url(url, args.output)
+        download_url.scatter(url, args.output)
+    download_url.gather(tqdm=True)
 
     print("Done! Now run:")
     print("    python scripts/prepare_dataset.py")
