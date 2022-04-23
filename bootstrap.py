@@ -28,6 +28,10 @@ def validate_input(prompt, validate=None):
     return response
 
 
+def git(*args):
+    return subprocess.check_output(["git"] + list(args))
+
+
 def main():
     def is_identifier(response):
         if not response.isidentifier():
@@ -72,14 +76,14 @@ def main():
     }
 
     def replace(string):
+        """Replace whole words only."""
+
         def _replace(match):
             return replacements[match.group(0)]
 
         # notice that the 'this' in 'thistle' is not matched
         return re.sub(
-            "|".join(r"\b%s\b" % re.escape(s) for s in replacements),
-            _replace,
-            "the cat has this thistle.",
+            "|".join(r"\b%s\b" % re.escape(s) for s in replacements), _replace, string
         )
 
     repo = Path(__file__).parent
@@ -91,15 +95,19 @@ def main():
         contents = replace(contents)
         py_file.write_text(contents)
         if py_file.stem in replacements:
-            py_file.rename(py_file.with_name(replacements[py_file.stem]))
+            dst = py_file.with_name(replacements[py_file.stem])
+            git("mv", py_file, dst)
 
     # Move the app folder
-    (repo / "app").rename(replacements["app"])
+    git("mv", "app", replacements["app"])
 
     # Delete this script at the end of execution
     # bootstrap_file.unlink()
 
-    subprocess.check_output(["git", "add", "*"])
+    git("add", "*")
+    # git("commit", "-m", "rename from template")
+
+    print("\nRenaming complete. Changes commited.\n")
 
 
 if __name__ == "__main__":
