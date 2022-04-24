@@ -107,6 +107,7 @@ def main():
     # Delete this script
     bootstrap_file.unlink()
 
+    subprocess.check_output(["pre-commit", "install"])
     git("add", "*")
     git("commit", "-m", "rename from template")
 
