@@ -1,3 +1,4 @@
+albumentations>=1.0.3
 bagua>=0.9.0
 lox>=0.11.0
 opencv-python>=4.5.5.64
