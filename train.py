@@ -28,6 +28,9 @@ def main():
     trainer_kwargs = {
         "gradient_clip_val": 1,
         "max_steps": args.iterations,
+        "callbacks": [
+            pl.callbacks.LearningRateMonitor(logging_interval="step"),
+        ],
     }
     dataloader_kwargs = {}
     model_kwargs = {}
